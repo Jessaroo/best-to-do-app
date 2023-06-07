@@ -11,7 +11,7 @@ class Category(models.Model):
     hobbies = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'A {self.color} {self.name}'
+        return f'A {self.name}'
     
     def get_absolute_url(self):
         return reverse('caetgory_detail', kwargs={'pk': self.id})
@@ -21,7 +21,7 @@ class Task(models.Model):
     when = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'A {self.color} {self.name}'
+        return f'A {self.todo}'
     
     def get_absolute_url(self):
         return reverse('tasks_detail', kwargs={'pk': self.id})
