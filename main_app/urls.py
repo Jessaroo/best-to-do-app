@@ -16,7 +16,7 @@ urlpatterns = [
     path('categories/', views.CategoryList.as_view(), name='category_list'),
     path('categories/<int:pk>/', views.CategoryDetail.as_view(), name='category_detail'),
     path('categories/create/', views.CategoryCreate.as_view(), name='category_create'),
-    path('categories/<int:pk>/update/', views.CategoryDetail.as_view(), name='category_update'),
-    path('categories/<int:pk>/delete/', views.CategoryDetail.as_view(), name='category_delete'),
+    path('categories/<int:pk>/update/', views.CategoryUpdate.as_view(), name='category_update'),
+    path('categories/<int:pk>/delete/', views.CategoryDelete.as_view(), name='category_delete'),
     path('accounts/signup/', views.signup, name='signup'),
 ]

@@ -5,6 +5,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 from django.views.generic import DetailView
 from .models import Task, Category
+from django.urls import reverse_lazy
 
 # dummy tasks
 tasks = [
@@ -13,16 +14,14 @@ tasks = [
 ]
 
 def home(request):
-  # Include an .html file extension - unlike when rendering EJS templates
   return render(request, 'home.html')
 
 def about(request):
   return render(request, 'about.html')
 
 def tasks_index(request):
-  return render(request, 'tasks/index.html', {
-    'tasks': tasks
-  })
+  tasks = Task.objects.all()
+  return render(request, 'tasks/index.html', {'tasks': tasks})
   
 def tasks_detail(request, task_id):
   task = Task.objects.get(id=task_id)
@@ -59,6 +58,17 @@ class CategoryDetail(DetailView):
   template_name = 'categories/detail.html'
   context_object_name = 'category' 
   
+class CategoryUpdate(UpdateView):
+  model = Categoryfields = ['name']
+  fields = ['name']
+  template_name = 'categories/category_form.html'
+  
+class CategoryDelete(DeleteView):
+  model = Category
+  success_url = reverse_lazy('category_list')
+  template_name = 'categories/category_confirm_delete.html'
+  contect_object_name = 'category'
+  
 class TaskCreate(CreateView):
   model = Task
   fields = ['todo', 'when']
@@ -79,7 +89,7 @@ def signup(request):
     if form.is_valid():
       user = form.save()
       login(request, user)
-      return reirect('home')
+      return redirect('home')
   else:
     form = UserCreationForm()
   return render(request, 'signup.html', {'form': form})
