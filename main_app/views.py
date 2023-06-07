@@ -1,3 +1,4 @@
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.shortcuts import render
 from django.views.generic.edit import CreateView
 from .models import Task
@@ -31,3 +32,11 @@ class TaskCreate(CreateView):
   fields = ['todo', 'when']
   def form_valid(self, form):
         return super().form_valid(form)
+      
+class TaskUpdate(UpdateView):
+    model = Task
+    fields = ['todo', 'when']
+
+class TaskDelete(DeleteView):
+    model = Task
+    success_url = '/tasks/'
