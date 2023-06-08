@@ -1,6 +1,6 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
-from . import views
+from . import views 
 from .views import CategoryCreate
 
 
@@ -19,6 +19,6 @@ urlpatterns = [
     path('categories/create/', views.CategoryCreate.as_view(), name='category_create'),
     path('categories/<int:pk>/update/', views.CategoryUpdate.as_view(), name='category_update'),
     path('categories/<int:pk>/delete/', views.CategoryDelete.as_view(), name='category_delete'),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('accounts/signup/', views.signup, name='signup'),
-    path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
 ]

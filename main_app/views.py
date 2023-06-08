@@ -22,6 +22,23 @@ def about(request):
 def tasks_index(request):
   tasks = Task.objects.all()
   return render(request, 'tasks/index.html', {'tasks': tasks})
+
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+      form = UserCreationForm(request.POST)
+      if form.is_valid():
+          user = form.save()
+          login(request, user)
+          return redirect('index')
+  else:
+      error_message = 'Invalid signup - try again'
+        
+  form = UserCreationForm()
+  return render(request, 'main_app/registration/signup.html', {
+    'form': form,
+    'error': error_message
+  })
   
 def tasks_detail(request, task_id):
   task = Task.objects.get(id=task_id)
@@ -82,14 +99,3 @@ class TaskUpdate(UpdateView):
 class TaskDelete(DeleteView):
     model = Task
     success_url = '/tasks/'
-    
-def signup(request):
-  if request.method == 'POST':
-    form = UserCreationForm(request.POST)
-    if form.is_valid():
-      user = form.save()
-      login(request, user)
-      return redirect('home')
-  else:
-    form = UserCreationForm()
-  return render(request, 'signup.html', {'form': form})
