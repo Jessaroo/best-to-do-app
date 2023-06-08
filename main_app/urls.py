@@ -20,5 +20,6 @@ urlpatterns = [
     path('categories/<int:pk>/update/', views.CategoryUpdate.as_view(), name='category_update'),
     path('categories/<int:pk>/delete/', views.CategoryDelete.as_view(), name='category_delete'),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('accounts/logout', auth_views.LogoutView.as_view(), name='logout'),
     path('accounts/signup/', views.signup, name='signup'),
 ]

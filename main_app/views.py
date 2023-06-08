@@ -6,6 +6,7 @@ from django.views import View
 from django.views.generic import DetailView
 from .models import Task, Category
 from django.urls import reverse_lazy
+from django.views.decorators.csrf import csrf_protect
 
 # dummy tasks
 tasks = [
@@ -22,23 +23,6 @@ def about(request):
 def tasks_index(request):
   tasks = Task.objects.all()
   return render(request, 'tasks/index.html', {'tasks': tasks})
-
-def signup(request):
-  error_message = ''
-  if request.method == 'POST':
-      form = UserCreationForm(request.POST)
-      if form.is_valid():
-          user = form.save()
-          login(request, user)
-          return redirect('index')
-  else:
-      error_message = 'Invalid signup - try again'
-        
-  form = UserCreationForm()
-  return render(request, 'main_app/registration/signup.html', {
-    'form': form,
-    'error': error_message
-  })
   
 def tasks_detail(request, task_id):
   task = Task.objects.get(id=task_id)
@@ -59,6 +43,24 @@ def remove_category(request, task_id, category_id):
   category = Category.objects.get(id=category_id)
   task.categories.remove(category)
   return redirect('tasks_detail', task_id=task.id)
+
+@csrf_protect
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+      form = UserCreationForm(request.POST)
+      if form.is_valid():
+          user = form.save()
+          login(request, user)
+          return redirect('index')
+  else:
+      error_message = 'Invalid signup - try again'
+        
+  form = UserCreationForm()
+  return render(request, 'registration/signup.html', {
+    'form': form,
+    'error': error_message
+  })
 
 class CategoryCreate(CreateView):
   model = Category
