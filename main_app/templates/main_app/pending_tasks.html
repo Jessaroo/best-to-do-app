@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Pending To-Do's</h1>
+
+{% for task in object_list %}
+
+<a href="{% url 'tasks_detail' task.id %}">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">
+            A <span style="color: {{ task.color.lower }}">{{ task.color }}</span> {{ task.name }}</span>
+            </span>
+        </div>
+    </div>
+</a>
+{% empty %}
+    <p>No pending to-do tasks found.</p>
+{% endfor %}
+{% endblock %}

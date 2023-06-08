@@ -1,4 +1,5 @@
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -9,10 +10,10 @@ from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
 
 # dummy tasks
-tasks = [
-    {'todo': 'wash towels', 'when': 'Today'},
-    {'todo': 'wash dishes', 'when': 'Tonight'},
-]
+# tasks = [
+#     {'todo': 'wash towels', 'when': 'Today'},
+#     {'todo': 'wash dishes', 'when': 'Tonight'},
+# ]
 
 def home(request):
   return render(request, 'home.html')
@@ -26,8 +27,12 @@ def tasks_index(request):
   
 def tasks_detail(request, pk):
   task = Task.objects.get(pk=pk)
-  return render(request, 'tasks/detail.html', {'task': task})
-  
+  categories = Category.objects.all()
+  return render(request, 'tasks/detail.html', {'task': task, 'categories': categories})
+
+def pending_tasks(request):
+  return render(request, 'main_app/pending_tasks.html')
+   
 def add_category(request, task_id):
   task = Task.objects.get(id=task_id)
   if request.method == 'POST':
@@ -88,11 +93,12 @@ class CategoryDelete(DeleteView):
   template_name = 'categories/category_confirm_delete.html'
   contect_object_name = 'category'
   
-class TaskCreate(CreateView):
+class TaskCreate(LoginRequiredMixin, CreateView):
   model = Task
   fields = ['todo', 'when']
   def form_valid(self, form):
-        return super().form_valid(form)
+    form.instance.user = self.request.user
+    return super().form_valid(form)
       
 class TaskUpdate(UpdateView):
     model = Task

@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <h1>To-Do Details</h1>
@@ -23,10 +24,14 @@
     </div>
   </div>
   <!-- New Markup Below -->
-  <div class="col s6">
-    <form action="{% url 'tasks_create' %}" method="POST">
+ 
+</div>
+
+<hr> <!-- Horizontal Rule Tag -->
+<!-- New Markup Below -->
+<div class="col s6">
+    <form action="{% url 'pending_tasks' %}" method="POST">
         {% csrf_token %}
-        <!-- Render the inputs -->
         <label for="id_todo">To-Do:</label>
         <input type="text" id="id_todo" name="todo" required>
         <label for="id_when">When:</label>
@@ -47,11 +52,6 @@
       </tbody>
     </table>
   </div>
-  <!-- New Markup Above -->
-</div>
-
-<hr> <!-- Horizontal Rule Tag -->
-
 <div class="row">
   <div class="col s6">
     <h3>{{ task.name }}'s Categories</h3>
@@ -72,7 +72,7 @@
         </div>
       {% endfor %}
     {% else %}
-      <h5>{{task.name}} doesn't have any categories</h5>
+      <h5>{{task.name}} No pending To-Do's</h5>
     {% endif %}
   </div>
   <div class="col s6">
@@ -86,34 +86,15 @@
           </span>
         </div>
         <div class="card-action">
-          <form action="{% url 'assoc_category' task.id category.id %}" method="post">
-            {% csrf_token %}
-            <input type="submit" value="Add" class="btn blue">
-          </form>
-        </div>
-      </div>
-      {% endfor %}
-    {% else %}
-    <h5>{{ task.name }} Already Has All To-Do's Available</h5>
-    {% endif %}
-  </div>
-</div>
-
-
-
-<!-- below all HTML -->
-<script>
-  const dateEl = document.getElementById('id_date');
-  // M is Materialize's global variable
-  M.Datepicker.init(dateEl, {
-    format: 'yyyy-mm-dd',
-    defaultDate: new Date(),
-    setDefaultDate: true,
-    autoClose: true
-  });
-
-  const selectEl = document.getElementById('id_meal');
-  M.FormSelect.init(selectEl)
-</script>
-
-{% endblock %}
+            <form action="{% url 'remove_category' task.id category.id %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="Remove" class="btn red">
+              </form>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <h5>{{ task.name }} No pending To-Do's</h5>
+      {% endif %}
+    </div>
+    {% endblock %}
