@@ -24,8 +24,8 @@ def tasks_index(request):
   tasks = Task.objects.all()
   return render(request, 'tasks/index.html', {'tasks': tasks})
   
-def tasks_detail(request, task_id):
-  task = Task.objects.get(id=task_id)
+def tasks_detail(request, pk):
+  task = Task.objects.get(pk=pk)
   return render(request, 'tasks/detail.html', {'task': task})
   
 def add_category(request, task_id):
