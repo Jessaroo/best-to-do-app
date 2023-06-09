@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 from django.views.generic import DetailView
-from .models import Task, Category, FavoriteQuote
+from .models import Task, Category, FavoriteQuote, Quote
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
 from .forms import TaskForm
@@ -13,11 +13,6 @@ from django import forms
 from django.forms import SelectMultiple
 import requests, random
 
-# dummy tasks
-# tasks = [
-#     {'todo': 'wash towels', 'when': 'Today'},
-#     {'todo': 'wash dishes', 'when': 'Tonight'},
-# ]
 
 def home(request):
   return render(request, 'home.html')
@@ -149,21 +144,40 @@ def random_quotes(request):
       quotes = response.json()
   else:
       quotes = []
-  user = request.user
+ 
   if request.method == 'POST':
       quote_id = request.POST.get('quote_id')
-      quote = quotes[int(quote_id)]
+      selected_quote = quotes[int(quote_id)]
+      FavoriteQuote.objects.create(
+        quote=selected_quote['q'],
+        author=selected_quote['a'],
+        user=request.user
+      )
+      return redirect('favorite_quotes')
+  return render(request, 'quotes.html', {'quotes': quotes})
+
+def save_quote(request):
+  if request.method == 'POST':
+      quote_text = request.POST.get('quote')
+      author_text = request.POST.get('author')
+      user = request.user
+      
       favorite_quote = FavoriteQuote(
-        quote=quote['q'],
-        author=quote['a'],
-        user=user
+          quote=quote_text,
+          author=author_text,
+          user=user
       )
       favorite_quote.save()
-      
-  return render(request, 'quotes.html', {'quotes': quotes})
+  return redirect('favorite_quotes')
 
 def favorite_quotes(request):
   user = request.user
   favorite_quotes = FavoriteQuote.objects.filter(user=user)
-  return render(request, 'favorite_quotes.html', {'favorite_quotes': favorite_quotes })
+  url = 'https://zenquotes.io/api/quotes/'
+  response = requests.get(url)
+  if response.status_code == 200:
+      quotes = response.json()
+  else:
+      quotes = []  
+  return render(request, 'favorite_quotes.html', {'favorite_quotes': favorite_quotes, 'quotes': quotes })
  

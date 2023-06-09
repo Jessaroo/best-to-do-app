@@ -1,16 +1,31 @@
 {% extends 'base.html' %}
+
 {% block content %}
 
 <h1>Favorite Quotes</h1>
 
-{% if favorite_quotes %}
-    <ul>
-        {% for quote in favorite_quotes %}
-        <li>{{ quote.content }}</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No favorite quotes yet.</p>
-{% endif %}
+<h2>Random Quotes</h2>
+
+{% for quote in quotes %}
+    <blockquote>
+        <p>{{ quote.q }}</p>
+        <footer>{{ quote.a }}</footer>
+        <form action="{% url 'save_quote' %}" method="POST"
+            {% csrf_token %}
+            <input type="hidden" name="quote" value="{{ quote.q }}">
+            <input type="hidden" name="author" value="{{ quote.a }}">
+            <button type="submit">Save</button>
+        </form>
+    </blockquote>
+{% endfor %}
+
+<h2>Your Saved Quotes</h2>
+
+{% for favorite_quote in favorite_quotes%}
+    <blockquote>
+        <p>{{ favorite_quote.quote }}</p>
+        <footer>{{ favorite_quote.author }}</footer>
+    </blockquote>
+{% endfor %}
 
 {% endblock %}
