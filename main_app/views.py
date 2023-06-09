@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 from django.views.generic import DetailView
-from .models import Task, Category
+from .models import Task, Category, FavoriteQuote
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
 from .forms import TaskForm

@@ -3,13 +3,14 @@
 
 <h1>Favorite Quotes</h1>
 
-{% for quote in favorite_quotes %}
-    <blockquote>
-        "{{ quote.quote }}"
-        <footer>{{ quote.author }}</footer>
-    </blockquote>
-{% empty %}
+{% if favorite_quotes %}
+    <ul>
+        {% for quote in favorite_quotes %}
+        <li>{{ quote.content }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
     <p>No favorite quotes yet.</p>
-{% endfor %}
+{% endif %}
 
 {% endblock %}
