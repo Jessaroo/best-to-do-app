@@ -3,15 +3,10 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 
 class Category(models.Model):
-    errands = models.CharField(max_length=50)
-    home = models.CharField(max_length=50)
-    finances = models.CharField(max_length=50)
-    work = models.CharField(max_length=50)
-    travel = models.CharField(max_length=50)
-    hobbies = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
 
     def __str__(self):
-        return f'A {self.name}'
+        return {self.name}
     
     def get_absolute_url(self):
         return reverse('caetgory_detail', kwargs={'pk': self.id})
@@ -19,9 +14,16 @@ class Category(models.Model):
 class Task(models.Model):
     todo = models.CharField(max_length=50)
     when = models.CharField(max_length=50)
+    completed = models.BooleanField(default=False)
+    categories = models.ManyToManyField(Category)
 
     def __str__(self):
-        return f'A {self.todo}'
+        return {self.todo}
     
     def get_absolute_url(self):
         return reverse('tasks_detail', kwargs={'pk': self.id})
+    
+class FavoriteQuote(models.Model):
+    quote = models.CharField(max_length=200)
+    author = models.CharField(max_length = 100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)

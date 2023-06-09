@@ -8,6 +8,10 @@ from django.views.generic import DetailView
 from .models import Task, Category
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
+from .forms import TaskForm
+from django import forms
+from django.forms import SelectMultiple
+import requests, random
 
 # dummy tasks
 # tasks = [
@@ -23,7 +27,17 @@ def about(request):
 
 def tasks_index(request):
   tasks = Task.objects.all()
-  return render(request, 'tasks/index.html', {'tasks': tasks})
+  url = 'https://zenquotes.io/api/quotes/'
+  response = requests.get(url)
+  if response.status_code == 200:
+    quotes = response.json()
+  else:
+    quotes = []
+    
+  random.shuffle(quotes)
+  num_quotes_to_display = 2
+  quotes = quotes[:num_quotes_to_display]
+  return render(request, 'tasks/index.html', {'tasks': tasks, 'quotes': quotes})
   
 def tasks_detail(request, pk):
   task = Task.objects.get(pk=pk)
@@ -95,15 +109,61 @@ class CategoryDelete(DeleteView):
   
 class TaskCreate(LoginRequiredMixin, CreateView):
   model = Task
-  fields = ['todo', 'when']
+  fields = ['todo', 'when', 'categories']
+  
   def form_valid(self, form):
     form.instance.user = self.request.user
     return super().form_valid(form)
+  
+  def get_form(self, form_class=None):
+    form = super().get_form(form_class)
+    form.fields['categories'].widget = forms.SelectMultiple()
+    return form
+  
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    context['categories'] = Category.objects.all()
+    return context
       
 class TaskUpdate(UpdateView):
     model = Task
-    fields = ['todo', 'when']
+    form_class = TaskForm
+    template_name = 'tasks/task_form.html'
+    success_url = reverse_lazy('tasks_index')
 
 class TaskDelete(DeleteView):
     model = Task
-    success_url = '/tasks/'
+    success_url = reverse_lazy('tasks_index')
+    template_name = 'tasks/task_confirm_delete.html'
+    
+    def delete(self, request, *args, **kwargs):
+      self.object = self.get_object()
+      success_url = self.get_success_url()
+      self.object.delete()
+      return HttpResponseRedirect(success_url)
+    
+def random_quotes(request):
+  url = 'https://zenquotes.io/api/quotes/'
+  response = requests.get(url)
+  if response.status_code == 200:
+      quotes = response.json()
+  else:
+      quotes = []
+  user = request.user
+  if request.method == 'POST':
+      quote_id = request.POST.get('quote_id')
+      quote = quotes[int(quote_id)]
+      favorite_quote = FavoriteQuote(
+        quote=quote['q'],
+        author=quote['a'],
+        user=user
+      )
+      favorite_quote.save()
+      
+  return render(request, 'quotes.html', {'quotes': quotes})
+
+def favorite_quotes(request):
+  user = request.user
+  favorite_quotes = FavoriteQuote.objects.filter(user=user)
+  return render(request, 'favorite_quotes.html', {'favorite_quotes': favorite_quotes })
+ 

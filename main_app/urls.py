@@ -1,14 +1,15 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from . import views 
-from .views import CategoryCreate
+from .views import CategoryCreate, random_quotes
 
 
 urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('index/',views.tasks_index, name='index'),
-    path('tasks/<int:pk>/', views.tasks_detail, name='tasks_detail'),
+    path('tasks/', views.tasks_index, name='tasks_index'),
+    path('tasks/<int:pk>/', views.tasks_detail, name='detail'),
     path('tasks/create/', views.TaskCreate.as_view(), name='tasks_create'),
     path('tasks/<int:pk>/update/', views.TaskUpdate.as_view(), name='tasks_update'),
     path('tasks/<int:pk>/delete/', views.TaskDelete.as_view(), name='tasks_delete'),
@@ -21,6 +22,8 @@ urlpatterns = [
     path('categories/<int:pk>/update/', views.CategoryUpdate.as_view(), name='category_update'),
     path('categories/<int:pk>/delete/', views.CategoryDelete.as_view(), name='category_delete'),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
+    path('quotes/', random_quotes, name='random_quotes'),
+    path('favorite-quotes/', views.favorite_quotes, name='favorite_quotes'),
     path('accounts/logout', auth_views.LogoutView.as_view(), name='logout'),
     path('accounts/signup/', views.signup, name='signup'),
 ]

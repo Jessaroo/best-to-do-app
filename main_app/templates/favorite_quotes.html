@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Favorite Quotes</h1>
+
+{% for quote in favorite_quotes %}
+    <blockquote>
+        "{{ quote.quote }}"
+        <footer>{{ quote.author }}</footer>
+    </blockquote>
+{% empty %}
+    <p>No favorite quotes yet.</p>
+{% endfor %}
+
+{% endblock %}

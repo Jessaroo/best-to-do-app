@@ -1,0 +1,6 @@
+{% for quote in quotes %}
+    <blockquote>
+        "{{ quote.q }}"
+        <footer>{{ quote.a }}</footer>
+    </blockquote>
+{% endfor %}
