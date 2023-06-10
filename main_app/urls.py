@@ -22,7 +22,7 @@ urlpatterns = [
     path('categories/<int:pk>/update/', views.CategoryUpdate.as_view(), name='category_update'),
     path('categories/<int:pk>/delete/', views.CategoryDelete.as_view(), name='category_delete'),
     path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
-    path('quotes/', random_quotes, name='random_quotes'),
+    path('quotes/', views.random_quotes, name='random_quotes'),
     path('favorite-quotes/', views.favorite_quotes, name='favorite_quotes'),
     path('accounts/logout', auth_views.LogoutView.as_view(), name='logout'),
     path('accounts/signup/', views.signup, name='signup'),

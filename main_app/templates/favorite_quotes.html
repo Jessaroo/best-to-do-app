@@ -22,10 +22,8 @@
 <h2>Your Saved Quotes</h2>
 
 {% for favorite_quote in favorite_quotes%}
-    <blockquote>
-        <p>{{ favorite_quote.quote }}</p>
-        <footer>{{ favorite_quote.author }}</footer>
-    </blockquote>
+        <p>{{ favorite_quote.quote_text }} - {{ favorite_quote.author }}</p>
+        <p>Associated Quote: {{ favorite_quote.quote.quote_text }} - {{ favorite_quote.quote.author}}
 {% endfor %}
 
 {% endblock %}

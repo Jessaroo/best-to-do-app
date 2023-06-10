@@ -5,13 +5,14 @@ from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views import View
 from django.views.generic import DetailView
-from .models import Task, Category, FavoriteQuote, Quote
+from main_app.models import Task, Category, FavoriteQuote, Quote
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
 from .forms import TaskForm
 from django import forms
 from django.forms import SelectMultiple
-import requests, random
+import requests
+import random
 
 
 def home(request):
@@ -92,7 +93,7 @@ class CategoryDetail(DetailView):
   context_object_name = 'category' 
   
 class CategoryUpdate(UpdateView):
-  model = Categoryfields = ['name']
+  model = Category
   fields = ['name']
   template_name = 'categories/category_form.html'
   
@@ -100,20 +101,20 @@ class CategoryDelete(DeleteView):
   model = Category
   success_url = reverse_lazy('category_list')
   template_name = 'categories/category_confirm_delete.html'
-  contect_object_name = 'category'
+  context_object_name = 'category'
   
 class TaskCreate(LoginRequiredMixin, CreateView):
   model = Task
   fields = ['todo', 'when', 'categories']
   
   def form_valid(self, form):
-    form.instance.user = self.request.user
-    return super().form_valid(form)
+      form.instance.user = self.request.user
+      return super().form_valid(form)
   
   def get_form(self, form_class=None):
-    form = super().get_form(form_class)
-    form.fields['categories'].widget = forms.SelectMultiple()
-    return form
+      form = super().get_form(form_class)
+      form.fields['categories'].widget = forms.SelectMultiple()
+      return form
   
   def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
@@ -121,21 +122,25 @@ class TaskCreate(LoginRequiredMixin, CreateView):
     return context
       
 class TaskUpdate(UpdateView):
-    model = Task
-    form_class = TaskForm
-    template_name = 'tasks/task_form.html'
-    success_url = reverse_lazy('tasks_index')
+  model = Task
+  form_class = TaskForm
+  template_name = 'tasks/task_form.html'
+  success_url = reverse_lazy('tasks_index')
 
 class TaskDelete(DeleteView):
-    model = Task
-    success_url = reverse_lazy('tasks_index')
-    template_name = 'tasks/task_confirm_delete.html'
+  model = Task
+  success_url = reverse_lazy('tasks_index')
+  template_name = 'tasks/task_confirm_delete.html'
     
-    def delete(self, request, *args, **kwargs):
+  def delete(self, request, *args, **kwargs):
       self.object = self.get_object()
       success_url = self.get_success_url()
       self.object.delete()
       return HttpResponseRedirect(success_url)
+    
+def Quote_list(request):
+    quotes = Quote.objects.all()
+    return render(request, 'quotes.html', {'quotes': quotes})
     
 def random_quotes(request):
   url = 'https://zenquotes.io/api/quotes/'
@@ -154,21 +159,21 @@ def random_quotes(request):
         user=request.user
       )
       return redirect('favorite_quotes')
-  return render(request, 'quotes.html', {'quotes': quotes})
+  return render(request, 'quotes.html')
 
 def save_quote(request):
-  if request.method == 'POST':
-      quote_text = request.POST.get('quote')
-      author_text = request.POST.get('author')
-      user = request.user
+    if request.method == 'POST':
+        quote_text = request.POST.get('quote')
+        author_text = request.POST.get('author')
+        user = request.user
       
-      favorite_quote = FavoriteQuote(
-          quote=quote_text,
-          author=author_text,
-          user=user
-      )
-      favorite_quote.save()
-  return redirect('favorite_quotes')
+        favorite_quote = FavoriteQuote(
+            quote=quote_text,
+            author=author_text,
+            user=user
+        )
+        favorite_quote.save()
+    return redirect('favorite_quotes')
 
 def favorite_quotes(request):
   user = request.user
@@ -180,4 +185,3 @@ def favorite_quotes(request):
   else:
       quotes = []  
   return render(request, 'favorite_quotes.html', {'favorite_quotes': favorite_quotes, 'quotes': quotes })
- 
