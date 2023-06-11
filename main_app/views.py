@@ -9,7 +9,6 @@ from django.views.generic import ListView
 from main_app.models import Task, Category, Quote
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
-from .forms import TaskForm
 import requests
 import random
 
@@ -38,13 +37,14 @@ def tasks_index(request):
     'quotes': quotes,
   }
   return render(request, 'tasks/index.html', context)
-  
+
+@login_required 
 def tasks_detail(request, pk):
   task = Task.objects.get(pk=pk)
   categories = Category.objects.all()
   return render(request, 'tasks/detail.html', {'task': task})
 
-@csrf_protect
+# @csrf_protect
 def signup(request):
   error_message = ''
   if request.method == 'POST':
