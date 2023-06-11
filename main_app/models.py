@@ -20,7 +20,7 @@ class Task(models.Model):
         return self.todo
     
     def get_absolute_url(self):
-        return reverse('tasks/detail', kwargs={'pk': self.id})
+        return reverse('detail', kwargs={'pk': self.id})
     
 class Quote(models.Model):
     quote_text = models.CharField(max_length=500)

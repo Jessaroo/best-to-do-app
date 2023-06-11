@@ -48,21 +48,11 @@ def signup(request):
 class TaskCreate(LoginRequiredMixin, CreateView):
     model = Task
     fields = ['todo', 'when']
+    success_url = reverse_lazy('index')
     
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
-    # success_url = ('tasks_index')
-  
-  # def get_form(self, form_class=None):
-  #     form = super().get_form(form_class)
-  #     form.fields['categories'].widget = forms.SelectMultiple()
-  #     return form
-  
-  # def get_context_data(self, **kwargs):
-  #   context = super().get_context_data(**kwargs)
-  #   context['categories'] = Category.objects.all()
-  #   return context
       
 class TaskUpdate(UpdateView):
   model = Task
