@@ -18,9 +18,9 @@
         {% endif %}
         <p>Categories:</p>
         <ul>
-            {% for category in task.categories.all %}
-                <li>{{ category.name }}</li>
-            {% endfor %}
+          {% for category in task.categories.all %}
+            <li>{{ category.name }}</li>
+          {% endfor %}
         </ul>
       </div>
       <div class="card-action">
@@ -31,17 +31,19 @@
   </div>
 
   <div class="col s6">
-    <form action="{% url 'tasks_index' %}" method="POST">
+    <form method="POST" action="{% url 'create_task' %}">
       {% csrf_token %}
-      <label for="id_todo">To-Do:</label>
-      <input type="text" id="id_todo" name="todo" required>
-      <label for="id_when">When:</label>
-      <input type="text" id="id_when" name="when" required>
-      <input type="submit" class="btn" value="Add To-Do">
+      <input type="hidden" name="task_id" value="{{ task.id }}">
+      <input type="text" name="title" placeholder="Task Title"><br>
+      <input type="text" name="description" placeholder="Task Description"><br>
+      <button type="submit">Create Task</button>
     </form>
     <table class="striped">
       <thead>
-        <tr><th>Date</th><th>Task</th></tr>
+        <tr>
+          <th>Date</th>
+          <th>Task</th>
+        </tr>
       </thead>
       <tbody>
         {% for to_do in task.task_set.all %}
