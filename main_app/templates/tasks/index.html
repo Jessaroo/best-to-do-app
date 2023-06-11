@@ -15,8 +15,12 @@
 <a href="{% url 'tasks_delete' pk=task.id %}">Delete</a>
 {% endfor %}
 
+<h2>Motivational Quotes</h2>
 {% for quote in quotes %}
-  <p>{{ quote }}</p>
+  <blockquote>
+  <p>{{ quote.q }}</p>
+  <footer>{{ quote.a }}</footer>
+  </blockquote>
 {% endfor %}
 
 {% endblock %}

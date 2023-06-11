@@ -23,7 +23,21 @@ def about(request):
 @login_required
 def tasks_index(request):
   tasks = Task.objects.filter(user=request.user)
-  return render(request, 'tasks/index.html', {'tasks': tasks})
+  url = 'https://zenquotes.io/api/quotes/'
+  response = requests.get(url)
+  if response.status_code == 200:
+      quotes = response.json()
+  else:
+      quotes = []
+  random.shuffle(quotes)
+  num_quotes_to_display = 2
+  quotes = quotes[:num_quotes_to_display]
+  
+  context = {
+    'tasks': tasks,
+    'quotes': quotes,
+  }
+  return render(request, 'tasks/index.html', context)
   
 def tasks_detail(request, pk):
   task = Task.objects.get(pk=pk)
@@ -69,15 +83,15 @@ class TaskDelete(DeleteView):
 class QuoteList(ListView):
   model = Quote
 
-def random_quotes(request):
-    url = 'https://zenquotes.io/api/quotes/'
-    response = requests.get(url)
-    if response.status_code == 200:
-      quotes = response.json()
-    else:
-      quotes = []
-    random.shuffle(quotes)
-    num_quotes_to_display = 2
-    quotes = quotes[:num_quotes_to_display]
+# def random_quotes(request):
+#     url = 'https://zenquotes.io/api/quotes/'
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#       quotes = response.json()
+#     else:
+#       quotes = []
+#     random.shuffle(quotes)
+#     num_quotes_to_display = 2
+#     quotes = quotes[:num_quotes_to_display]
     
-    return render(request, 'tasks_index.html', {'quotes': quotes})
+#     return render(request, 'tasks_index.html', {'quotes': quotes})
