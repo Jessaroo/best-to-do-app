@@ -1,10 +1,12 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from main_app.models import Task, Category
+from django.views.generic import ListView
+from main_app.models import Task, Category, Quote
 from django.urls import reverse_lazy
 from django.views.decorators.csrf import csrf_protect
 from .forms import TaskForm
@@ -18,8 +20,9 @@ def home(request):
 def about(request):
   return render(request, 'about.html')
 
+@login_required
 def tasks_index(request):
-  tasks = Task.objects.all()
+  tasks = Task.objects.filter(user=request.user)
   return render(request, 'tasks/index.html', {'tasks': tasks})
   
 def tasks_detail(request, pk):
@@ -56,15 +59,16 @@ class TaskCreate(LoginRequiredMixin, CreateView):
       
 class TaskUpdate(UpdateView):
   model = Task
-  form_class = TaskForm
-  template_name = 'tasks/task_form.html'
-  success_url = reverse_lazy('tasks_index')
+  fields = ['todo', 'when']
 
 class TaskDelete(DeleteView):
   model = Task
-  success_url = reverse_lazy('tasks_index')
-  template_name = 'tasks/task_confirm_delete.html'
-  
+  success_url = reverse_lazy('index')
+  template_name = 'main_app/task_confirm_delete.html'
+
+class QuoteList(ListView):
+  model = Quote
+
 def random_quotes(request):
     url = 'https://zenquotes.io/api/quotes/'
     response = requests.get(url)
@@ -76,4 +80,4 @@ def random_quotes(request):
     num_quotes_to_display = 2
     quotes = quotes[:num_quotes_to_display]
     
-    return quotes
+    return render(request, 'tasks_index.html', {'quotes': quotes})

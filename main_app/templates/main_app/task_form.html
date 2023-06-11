@@ -8,20 +8,12 @@
     <h1>Add Task</h1>
 {% endif %}
 
-<form action="{% url 'tasks_update' pk=object.id %}" method="post">
+<form action="" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
     <table>
         {{ form.as_table }}
     </table>
-    <button class="btn blue" type="submit">
-        {% if object %} 
-            Update Task 
-        {% else %} 
-            Add To-Do 
-        {% endif %}
-    </button>
+    <button class="btn blue" type="submit">{% if object %} Update Task {% else %} Add To-Do {% endif %}</button>
 </form>
 
-<a href="{% url 'index' %}">Cancel</a>
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Quotes Index</h1>
+
+{% for quote in object_list %}
+
+<a href="#">
+    <div class="card">
+        <div class="card-content">
+            <span class="card-title">A <span style="color: {{ quote.color.lower }}">{{ quote.color }}</span> {{ quote.name }}</span>
+        </div>
+    </div>
+</a>
+
+{% endfor %}
+
+{% endblock %}

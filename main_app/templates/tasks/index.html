@@ -5,16 +5,18 @@
 <h1>To Do List</h1>
 
 {% for task in tasks %}
-<a href="{% url 'detail' task.id %}">
   <div class="card">
     <div class="card-content">
       <span>{{ task.todo }}</span>
       <p>When: {{ task.when }}</p> 
     </div>
   </div>
-</a>
 <a href="{% url 'tasks_update' pk=task.id %}">Edit</a>
-<a href="{% url 'tasks_delete' pk=task.id %}">Done</a>
-  {% endfor %}
+<a href="{% url 'tasks_delete' pk=task.id %}">Delete</a>
+{% endfor %}
+
+{% for quote in quotes %}
+  <p>{{ quote }}</p>
+{% endfor %}
 
 {% endblock %}
