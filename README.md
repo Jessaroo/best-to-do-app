@@ -11,6 +11,9 @@ https://best-to-do-app.herokuapp.com/
 
 ## Technologies used: Django, HTML, Materialize CSS, Javascript.
 
+![WireFrameHome](/main_app/imgs/Home.jpeg)
+![WireFrametasks](/main_app/imgs/Add.jpeg)
+![WireFrameviewAllTasks](/main_app/imgs/List.jpeg)
 
 ## Planned future enhancesments: A user will have a favorites page that they can save their favorite quotes to. A user will have a page to see previous tasks. A user wil be able to set due dates.
 
