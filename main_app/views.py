@@ -50,8 +50,8 @@ def signup(request):
           user = form.save()
           login(request, user)
           return redirect('about')
-  else:
-      error_message = 'Invalid signup - try again'
+      else:
+          error_message = 'Invalid signup - try again'
         
   form = UserCreationForm()
   return render(request, 'registration/signup.html', {
