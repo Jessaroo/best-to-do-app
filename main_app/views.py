@@ -3,12 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from main_app.models import Task, Category, Quote
 from django.urls import reverse_lazy
-from django.views.decorators.csrf import csrf_protect
 import requests
 import random
 
@@ -44,7 +42,6 @@ def tasks_detail(request, pk):
   categories = Category.objects.all()
   return render(request, 'tasks/detail.html', {'task': task})
 
-# @csrf_protect
 def signup(request):
   error_message = ''
   if request.method == 'POST':
@@ -52,7 +49,7 @@ def signup(request):
       if form.is_valid():
           user = form.save()
           login(request, user)
-          return redirect('index')
+          return redirect('about')
   else:
       error_message = 'Invalid signup - try again'
         
@@ -61,6 +58,10 @@ def signup(request):
     'form': form,
     'error': error_message
   })
+
+@login_required
+def profile(request):
+    return render(request, 'registration/profile.html')
   
 class TaskCreate(LoginRequiredMixin, CreateView):
     model = Task
@@ -82,16 +83,3 @@ class TaskDelete(DeleteView):
 
 class QuoteList(ListView):
   model = Quote
-
-# def random_quotes(request):
-#     url = 'https://zenquotes.io/api/quotes/'
-#     response = requests.get(url)
-#     if response.status_code == 200:
-#       quotes = response.json()
-#     else:
-#       quotes = []
-#     random.shuffle(quotes)
-#     num_quotes_to_display = 2
-#     quotes = quotes[:num_quotes_to_display]
-    
-#     return render(request, 'tasks_index.html', {'quotes': quotes})

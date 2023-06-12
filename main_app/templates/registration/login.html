@@ -10,4 +10,8 @@
     <input class="btn blue" type="submit" value="Login">
 </form>
 
+{% if user.is_authenticated %}
+    <p>Logged in as: {{ user.username }}</p>
+{% endif %}
+
 {% endblock %}
