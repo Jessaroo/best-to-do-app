@@ -59,9 +59,9 @@ def signup(request):
     'error': error_message
   })
 
-@login_required
-def profile(request):
-    return render(request, 'registration/profile.html')
+# @login_required
+# def profile(request):
+#     return render(request, 'registration/profile.html')
   
 class TaskCreate(LoginRequiredMixin, CreateView):
     model = Task
