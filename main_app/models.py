@@ -8,8 +8,6 @@ class Category(models.Model):
     def __str__(self):
         return self.name
     
-    def get_absolute_url(self):
-        return reverse('category_detail', kwargs={'pk': self.id})
     
 class Quote(models.Model):
     quote_text = models.CharField(max_length=500)
@@ -26,6 +24,7 @@ class Task(models.Model):
     todo = models.CharField(max_length=50)
     when = models.CharField(max_length=500)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
     
     def __str__(self):
         return self.todo

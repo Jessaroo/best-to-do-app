@@ -15,5 +15,9 @@
     </table>
     <button class="btn blue" type="submit">{% if object %} Update Task {% else %} Add To-Do {% endif %}</button>
 </form>
+<script>
+    const selectEl = document.getElementById('id_category');
+    M.FormSelect.init(selectEl);
+</script>
 
 {% endblock %}

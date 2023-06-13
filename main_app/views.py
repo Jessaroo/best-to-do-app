@@ -7,6 +7,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView
 from main_app.models import Task, Category, Quote
 from django.urls import reverse_lazy
+from .models import Task
 import requests
 import random
 
@@ -40,7 +41,19 @@ def tasks_index(request):
 def tasks_detail(request, pk):
   task = Task.objects.get(pk=pk)
   category = Category.objects.all()
-  return render(request, 'tasks/detail.html', {'task': task})
+  category_filter = request.GET.get('category')
+  
+  if category_filter:
+      tasks = Task.objects.filter(category__name=category_filter)
+  else: 
+      tasks = Task.objects.all()
+      
+  return render(request, 'tasks/detail.html', {'task': task, 'tasks':task, 'category':category})
+
+def tasks_filter(request):
+    category = request.GET.get('category')
+    tasks = Task.objects.filter(category__name=category)
+    return render(request, 'tasks/index.html', {'tasks': tasks})
 
 def signup(request):
   error_message = ''
@@ -61,7 +74,7 @@ def signup(request):
   
 class TaskCreate(LoginRequiredMixin, CreateView):
     model = Task
-    fields = ['todo', 'when']
+    fields = ['todo', 'when', 'category']
     success_url = reverse_lazy('index')
     
     def form_valid(self, form):
@@ -70,7 +83,7 @@ class TaskCreate(LoginRequiredMixin, CreateView):
       
 class TaskUpdate(UpdateView):
   model = Task
-  fields = ['todo', 'when']
+  fields = ['todo', 'when', 'category']
 
 class TaskDelete(DeleteView):
   model = Task
