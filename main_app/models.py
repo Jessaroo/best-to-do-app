@@ -26,7 +26,6 @@ class Task(models.Model):
     todo = models.CharField(max_length=50)
     when = models.CharField(max_length=500)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    # quotes = models.ManyToManyField(Quote)
     
     def __str__(self):
         return self.todo
