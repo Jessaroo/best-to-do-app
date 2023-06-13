@@ -39,7 +39,7 @@ def tasks_index(request):
 @login_required 
 def tasks_detail(request, pk):
   task = Task.objects.get(pk=pk)
-  categories = Category.objects.all()
+  category = Category.objects.all()
   return render(request, 'tasks/detail.html', {'task': task})
 
 def signup(request):
