@@ -9,7 +9,7 @@
 https://best-to-do-app.herokuapp.com/
 
 
-## Technologies used: Django, HTML, Materialize CSS, Javascript.
+## Technologies used: Python, Django, HTML, Materialize CSS, Javascript, API from https://zenquotes.io/.
 
 ![WireFrameHome](/main_app/imgs/Home.jpeg)
 ![WireFrametasks](/main_app/imgs/Add.jpeg)
